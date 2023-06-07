@@ -1,0 +1,59 @@
+{% extends 'measure/basic.html' %}
+    <!--Style-->
+      {% block css %}
+      .col-md-3{
+        display: inline-block;
+        margin-left: -4px;
+      }
+      .col-md-3 img{
+        width:100%;
+        height:auto
+      }
+      body .carousel-indicator li{
+        background-color: blue;
+      }
+      body .carousel-control-prev-icon,
+      body .carousel-control-next-icon{
+        background-color: blue;
+      }
+      body .no-padding{
+        padding-left: 0;
+        padding-right: 0;
+      }
+      {% endblock %}
+    
+
+    {% block body %}
+    <div class="container text-center">
+      <div class="row justify-content-center align-middle my-5">
+        <div class="col-sm-4 mb-4 mb-sm-0">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Check previous readings</h5>
+              <p class="card-text">{{number_of_readings}} readings taken till date!</p>
+              <a href="/measure/measurementHistory" class="btn btn-primary">Go!</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">New Measurement</h5>
+              <p class="card-text">Take new measurement with the soil sampling rover!</p>
+              <a href="/measure/fieldInput" class="btn btn-primary">Autonomous</a>
+              <a href="/measure/liveMeasurementManual" class="btn btn-primary">Manual</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Rover Manual Controls</h5>
+              <p class="card-text">Move the rover manually!</p>
+              <a href="/measure/manualOperations" class="btn btn-primary">Go!</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}

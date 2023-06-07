@@ -1,0 +1,49 @@
+{% extends 'measure/basic.html' %}
+
+{% block title %} Measurement History {% endblock %}
+
+{% block body %}
+
+<h2 class="container my-4">Readings History</h2>
+
+<div class="container my-4">
+<table class="table table-bordered" border="1">
+    <thead>
+      <tr>
+        <th scope="col">Index</th>
+        <th scope="col">Location X</th>
+        <th scope="col">Location Y</th>
+        <th scope="col">Drilled</th>
+        <th scope="col">pH Current</th>
+        <th scope="col">pH_Value</th>
+        <th scope="col">Nitrogen Sensor</th>
+        <th scope="col">Nitrogen Value</th>
+        <th scope="col">Phosphorous Sensor</th>
+        <th scope="col">Phosphorous Value</th>
+        <th scope="col">Potassium Sensor</th>
+        <th scope="col">Potassium Value</th>
+        <th scope="col">Measurement Date and Time</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in reading %}
+            <tr>
+                <td>{{i.id}}</td>
+                <td>{{i.location_x}}</td>
+                <td>{{i.location_y}}</td>
+                <td>{{i.drilled_status}}</td>
+                <td>{{i.ph_current}}</td>
+                <td>{{i.ph_value}}</td>
+                <td>{{i.nitrogen_sensor}}</td>
+                <td>{{i.nitrogen_reading}}</td>
+                <td>{{i.phosphorous_sensor}}</td>
+                <td>{{i.phosphorous_reading}}</td>
+                <td>{{i.potassium_sensor}}</td>
+                <td>{{i.potassium_reading}}</td>
+                <td>{{i.measurement_date}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends 'measure/basic.html' %}
+
+{% block title %} Live Measurement Manual {% endblock %}
+
+{% block body %} 
+    <div class="container my-4 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#moveRover">
+            Move Rover
+        </button>
+        <div class="modal fade" id="moveRover" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="moveRoverLabel">Moving Rover</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Click on Stop Rover button to stop the rover.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Stop Rover</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#drillSoil">
+            Drill Soil
+        </button>
+        <div class="modal fade" id="drillSoil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="drillSoilLabel">Drilling Soil</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Click on Stop Drilling button to stop the drilling.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Stop Drilling</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="takeReadingBtn" class="btn btn-primary mx-4">Take Reading</button>
+          <!-- <button type="button" id="takeReadingBtn" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#takeReading">
+            Take Reading
+        </button>
+        <div class="modal fade" id="takeReading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Taking soil reading</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Click on Stop Reading button to discard the reading process.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Stop Reading</button>
+                </div>
+              </div>
+            </div>
+          </div> -->
+    </div>
+
+    <table id="liveTable" class="table my-4 container my-4 d-flex justify-content-center visually-hidden table-bordered">
+      <tbody id="liveTableBody">
+        <th>Nitrogen</th>
+          <th>Phosphorous</th>
+          <th>Potassium</th>
+          <th>pH</th>
+      </tbody>
+    </table>
+    
+
+    <div class="container spinner-border my-4 d-flex justify-content-center visually-hidden" role="status" id="spinner">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script>
+
+    console.log("HELLO FROM JS");
+
+    let takeReadingBtn = document.getElementById('takeReadingBtn'); //Access Button
+    console.log("Button Found")
+    takeReadingBtn.addEventListener('click',sendTakeReadingRequest); //Event which detects when button is clicked
+
+    function sendTakeReadingRequest(){
+      // XHR Object instantiate
+      const xhr = new XMLHttpRequest();
+      //open the object
+      xhr.open('GET','liveReadingManual_endpoint', true);
+      //in progress action
+      xhr.onprogress=function(){
+        
+      }
+      //what to do when loaded
+      xhr.onload=function(){
+        spinner.classList.add("visually-hidden");
+        console.log(this.responseText);
+        let reading = JSON.parse(this.responseText);
+        let table = document.getElementById('liveTable');
+        // var tableBody = document.getElementById("liveTableBody");
+        table.classList.remove("visually-hidden");
+        nitrogen = reading['nitrogen'];
+        phosphorous = reading['phosphorous'];
+        potassium = reading['potassium'];
+        ph = reading['ph'];
+        // var row = `<tr>
+        //                 <td>${nitrogen}</td>
+        //                 <td>${phosphorous}</td>
+        //                 <td>${potassium}</td>
+        //           </tr>
+        // `
+        // // tableRow = `<tr><td>${nitrogen}</td><td>${phosphorous}</td><td>${potassium}</td><td>${ph}</td></tr>`
+        // tableBody.innerHTML = row;
+        var liveTable = $("#liveTable");
+        // var tableBody = $("#liveTableBody");
+        var newRow = $("<tr></tr>");
+        var cell1 = $("<td></td>").text(nitrogen).appendTo(newRow);
+        // newRow.append(cell1);
+
+        var cell2 = $("<td></td>").text(phosphorous).appendTo(newRow);
+        // newRow.append(cell2);
+        var cell3 = $("<td></td>").text(potassium).appendTo(newRow);
+        // newRow.append(cell3);
+
+        var cell4 = $("<td></td>").text(ph).appendTo(newRow);
+        // newRow.append(cell4);
+        liveTable.append(newRow)
+
+// Add more cells for additional data fields
+
+        console.log(nitrogen);
+      }
+      xhr.send();
+      let spinner = document.getElementById("spinner");
+      console.log("Found spinner");
+      spinner.classList.remove("visually-hidden");
+    }
+
+  </script>
+
+{% endblock %}

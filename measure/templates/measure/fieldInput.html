@@ -1,0 +1,26 @@
+{% extends 'measure/basic.html' %}
+
+{% block title %} Field Data {% endblock %}
+
+{% block body %} 
+
+    <form action="/measure/liveMeasurementAutonomous" method="post">{% csrf_token %}
+        <div class="my-4 container mb-3" style="padding-top: 50px">
+            <label for="fieldLength" class="form-label">Field Length</label>
+            <input type="number" class="form-control" id="fieldLength" placeholder="" name="fieldLength">
+        </div>
+        <div class="container mb-3">
+            <label for="fieldWidth" class="form-label">Field Width</label>
+            <input type="number" class="form-control" id="fieldWidth" placeholder="" name="fieldWidth">
+        </div>
+        <div class="container mb-3">
+            <label for="numberOfReadings" class="form-label">Number of Readings</label>
+            <input type="number" class="form-control" id="numberOfReadings" placeholder="" name="numberOfReadings">
+        </div>
+
+        <div class="container">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+{% endblock %}
