@@ -26,4 +26,7 @@ urlpatterns = [
     path("liveMeasurementManual", views.liveMeasurementManual, name="liveMeasurementManual"),
     path("manualOperations",views.manualOperations,name="manualOperations"),
     path('liveReadingManual_endpoint/', views.takeReading_ajax, name='liveReadingManual_endpoint'),
+    path('moveRover_endpoint/',views.moveRover,name="moveRoverManual"),
+    path('stopMotors_endpoint/',views.stopMotors,name="stopMotorsManual"),
+    path('drill_endpoint/',views.drill_endpoint,name="drillManual")
 ]

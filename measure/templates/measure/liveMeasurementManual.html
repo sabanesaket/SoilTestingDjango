@@ -3,8 +3,14 @@
 {% block title %} Live Measurement Manual {% endblock %}
 
 {% block body %} 
+
+    <div id="takeReadingAlert" class="alert alert-success alert-dismissible fade show visually-hidden" role="alert">
+      Soil Reading Successful!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <div class="container my-4 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#moveRover">
+        <button type="button" id ="moveRoverBtn" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#moveRover">
             Move Rover
         </button>
         <div class="modal fade" id="moveRover" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -14,17 +20,17 @@
                   <h1 class="modal-title fs-5" id="moveRoverLabel">Moving Rover</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body">  
                   Click on Stop Rover button to stop the rover.
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Stop Rover</button>
+                  <button type="button" id="stopRoverBtn" class="btn btn-primary">Stop Rover</button>
                 </div>
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#drillSoil">
+          <button type="button" id="drillInBtn" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#drillSoil">
             Drill Soil
         </button>
         <div class="modal fade" id="drillSoil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -39,32 +45,12 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Stop Drilling</button>
+                  <button type="button" id="stopDrillBtn" class="btn btn-primary">Stop Drilling</button>
                 </div>
               </div>
             </div>
           </div>
           <button type="button" id="takeReadingBtn" class="btn btn-primary mx-4">Take Reading</button>
-          <!-- <button type="button" id="takeReadingBtn" class="btn btn-primary mx-4" data-bs-toggle="modal" data-bs-target="#takeReading">
-            Take Reading
-        </button>
-        <div class="modal fade" id="takeReading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Taking soil reading</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  Click on Stop Reading button to discard the reading process.
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Stop Reading</button>
-                </div>
-              </div>
-            </div>
-          </div> -->
     </div>
 
     <table id="liveTable" class="table my-4 container my-4 d-flex justify-content-center visually-hidden table-bordered">
@@ -97,11 +83,12 @@
       xhr.open('GET','liveReadingManual_endpoint', true);
       //in progress action
       xhr.onprogress=function(){
-        
+        //add onprogress code
       }
       //what to do when loaded
       xhr.onload=function(){
         spinner.classList.add("visually-hidden");
+        takeReadingAlert.classList.remove("visually-hidden");
         console.log(this.responseText);
         let reading = JSON.parse(this.responseText);
         let table = document.getElementById('liveTable');
@@ -111,37 +98,71 @@
         phosphorous = reading['phosphorous'];
         potassium = reading['potassium'];
         ph = reading['ph'];
-        // var row = `<tr>
-        //                 <td>${nitrogen}</td>
-        //                 <td>${phosphorous}</td>
-        //                 <td>${potassium}</td>
-        //           </tr>
-        // `
-        // // tableRow = `<tr><td>${nitrogen}</td><td>${phosphorous}</td><td>${potassium}</td><td>${ph}</td></tr>`
-        // tableBody.innerHTML = row;
         var liveTable = $("#liveTable");
-        // var tableBody = $("#liveTableBody");
         var newRow = $("<tr></tr>");
         var cell1 = $("<td></td>").text(nitrogen).appendTo(newRow);
-        // newRow.append(cell1);
-
         var cell2 = $("<td></td>").text(phosphorous).appendTo(newRow);
-        // newRow.append(cell2);
         var cell3 = $("<td></td>").text(potassium).appendTo(newRow);
-        // newRow.append(cell3);
-
         var cell4 = $("<td></td>").text(ph).appendTo(newRow);
-        // newRow.append(cell4);
         liveTable.append(newRow)
-
-// Add more cells for additional data fields
-
         console.log(nitrogen);
       }
       xhr.send();
       let spinner = document.getElementById("spinner");
       console.log("Found spinner");
       spinner.classList.remove("visually-hidden");
+      let takeReadingAlert = document.getElementById('takeReadingAlert');
+    }
+
+    let moveRoverBtn = document.getElementById('moveRoverBtn');
+    moveRoverBtn.addEventListener('click',sendMoveRoverRequest);
+    function sendMoveRoverRequest(){
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET','moveRover_endpoint', true);
+      xhr.onprogress=function(){
+        //add onprogress code
+      }
+      xhr.onload=function(){
+        //add onload code
+      }
+      xhr.send();
+    }
+
+    let stopRoverBtn = document.getElementById('stopRoverBtn');
+    console.log("Found Stop Rover Button")
+    stopRoverBtn.addEventListener('click',sendStopMotorRequest);
+    function sendStopMotorRequest(){
+      console.log("Stop Motors Button Clicked");
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET','stopMotors_endpoint',true);
+      xhr.onprogress=function(){
+        //add onprogress code
+      }
+      xhr.onload = function(){
+        //add onload code
+      }
+      xhr.send();
+    }
+
+    let drillInBtn = document.getElementById('drillInBtn');
+    console.log("Found Drill Button")
+    drillInBtn.addEventListener('click',sendDrillInRequest);
+
+    let stopDrillBtn = document.getElementById('stopDrillBtn');
+    console.log("Found Stop Drill Button");
+    stopDrillBtn.addEventListener('click',sendStopMotorRequest);
+
+    function sendDrillInRequest(){
+      console.log("Drill Button Clicked");
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET','drill_endpoint',true);
+      xhr.onload=function(){
+
+      }
+      xhr.onprogress=function(){
+
+      }
+      xhr.send();
     }
 
   </script>
